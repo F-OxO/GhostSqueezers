@@ -31,14 +31,7 @@ public class PolarBeltProvider : MonoBehaviour {
         }
 #elif UNITY_ANDROID && !UNITY_EDITOR      
         PolarBeltManager.initialize(new PlayBionic.PolarBeltAPI.Android.AndroidAdapter());        
-#endif
-
-        // Create the device
-        PolarBelt = PolarBeltManager.createPolarBelt("polarBelt", deviceAddress);
-        PolarBelt.OnConnectionStateChanged += PolarBelt_OnConnectionStateChanged;
-        PolarBelt.OnBatteryLevelChanged += PolarBelt_OnBatteryLevelChanged;
-        PolarBelt.OnHeartRateChanged += PolarBelt_OnHeartRateChanged;
-        PolarBelt.OnRRIntervalChanged += PolarBelt_OnRRIntervalChanged;
+#endif        
     }
 
     private bool Application_wantsToQuit() {
@@ -58,8 +51,18 @@ public class PolarBeltProvider : MonoBehaviour {
     private void Update() {
         if (!PolarBeltManager.isInitialized()) { return; }
 
-        // Keep the polar belt connected
+
         if (_connectCooldown == 0) {
+            // Initially create the device (this must not happen immediately after initializing the API manager)
+            if (PolarBelt == null) {
+                PolarBelt = PolarBeltManager.createPolarBelt("polarBelt", deviceAddress);
+                PolarBelt.OnConnectionStateChanged += PolarBelt_OnConnectionStateChanged;
+                PolarBelt.OnBatteryLevelChanged += PolarBelt_OnBatteryLevelChanged;
+                PolarBelt.OnHeartRateChanged += PolarBelt_OnHeartRateChanged;
+                PolarBelt.OnRRIntervalChanged += PolarBelt_OnRRIntervalChanged;
+            }
+
+            // Keep the polar belt connected
             if (PolarBelt.ConnectionState == PolarBelt.EConnectionState.Disconnected ||
                 PolarBelt.ConnectionState == PolarBelt.EConnectionState.Failed) {
                 Debug.Log("Connect Polar Belt...");

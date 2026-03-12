@@ -33,12 +33,6 @@ public class MyoArmbandProvider : MonoBehaviour {
         MyoArmbandManager.initialize(new PlayBionic.MyoArmbandAPI.Android.AndroidAdapter());
 #endif
         }
-
-        // Create Device
-        MyoArmband = MyoArmbandManager.createArmband("Myo", deviceAddress);
-        MyoArmband.OnConnectionStateChanged += MyoArmband_OnConnectionStateChanged;
-        MyoArmband.OnBatteryLevelUpdated += MyoArmband_OnBatteryLevelUpdated;
-        MyoArmband.OnEmgDataReceived += MyoArmband_OnEmgDataReceived;
     }
 
     private bool Application_wantsToQuit() {
@@ -57,10 +51,18 @@ public class MyoArmbandProvider : MonoBehaviour {
     }
 
     private void Update() {
-        if (!MyoArmbandManager.isInitialized() || MyoArmband == null) { return; }
+        if (!MyoArmbandManager.isInitialized()) { return; }
 
-        // Keep the armbands connected        
         if (_connectCooldown == 0) {
+            // Initially create the device (this must not happen immediately after initializing the API manager)
+            if (MyoArmband == null) {
+                MyoArmband = MyoArmbandManager.createArmband("Myo", deviceAddress);
+                MyoArmband.OnConnectionStateChanged += MyoArmband_OnConnectionStateChanged;
+                MyoArmband.OnBatteryLevelUpdated += MyoArmband_OnBatteryLevelUpdated;
+                MyoArmband.OnEmgDataReceived += MyoArmband_OnEmgDataReceived;
+            }
+
+            // Keep the armbands connected        
             if (MyoArmband.ConnectionState == EConnectionState.Disconnected ||
                 MyoArmband.ConnectionState == EConnectionState.Failed) {
                 Debug.Log($"Connect Myo...");
