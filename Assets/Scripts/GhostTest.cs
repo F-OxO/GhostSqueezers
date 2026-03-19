@@ -7,8 +7,17 @@ public class Ghost : MonoBehaviour
     [SerializeField] public float speed = 4.0f;               // Constant forward speed
     [SerializeField] public float rotationSpeed = 2.0f;       // Speed of steering towards the player
     [SerializeField] public float wobble = 50.0f;       // Speed of steering towards the player
-    [SerializeField] public GameObject player;                  // Reference to the player
-    private float rand = Random.Range(0f, 3f);
+    [SerializeField] public GameObject player;  
+    [SerializeField] public GameObject camera;               
+    public GameObject explosion;
+
+    private float rand = 0f;
+
+    void Start()
+    {
+        rand = Random.Range(0f, 3f);
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -16,7 +25,11 @@ public class Ghost : MonoBehaviour
         // Check if the life counter is less than or equal to zero
         if (lifeCounter <= 0)
         {
-            Destroy(gameObject); 
+            GameObject explo = Instantiate(explosion, transform.position, camera.transform.rotation);
+            explo.SetActive(true);
+            Destroy(gameObject);
+            // gameObject.SetActive(false);
+            // lifeCounter = 100f;
         }
 
         // Calculate the direction to the player
