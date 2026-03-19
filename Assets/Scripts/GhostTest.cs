@@ -7,9 +7,10 @@ public class Ghost : MonoBehaviour
     [SerializeField] public float speed = 4.0f;               // Constant forward speed
     [SerializeField] public float rotationSpeed = 2.0f;       // Speed of steering towards the player
     [SerializeField] public float wobble = 50.0f;       // Speed of steering towards the player
-    [SerializeField] public GameObject player;  
+    [SerializeField] public Doll player;  
     [SerializeField] public GameObject camera;               
     public GameObject explosion;
+    public float light_damage = 0f;
 
     private float rand = 0f;
 
@@ -33,7 +34,13 @@ public class Ghost : MonoBehaviour
         }
 
         // Calculate the direction to the player
-        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+        Vector3 toPlayer = player.transform.position - transform.position;
+        Vector3 directionToPlayer = toPlayer.normalized;
+
+        if(player.myoStrength < 0.4f && toPlayer.magnitude < 1f)
+        {
+            directionToPlayer *= -1f;
+        }
 
         // Determine the forward direction of the object
         Vector3 forward = transform.forward;
@@ -53,6 +60,10 @@ public class Ghost : MonoBehaviour
 
         // Move the object forward at constant speed
         transform.position += forward * speed * Time.deltaTime * (1f + Mathf.Sin(Time.time * 4f + rand) * .33f);
+
+
+        float rad_damage = Mathf.Max(0f, 1f - (50f * toPlayer.magnitude * toPlayer.magnitude));
+        TakeDamage(rad_damage * light_damage * (1f - player.myoStrength));
     }
 
     // Method to reduce the ghost's life

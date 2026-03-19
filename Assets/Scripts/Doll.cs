@@ -17,7 +17,8 @@ public class Doll : MonoBehaviour {
 
     private float[] moving_avg = new float[16];
     int moving_idx = 0;
-
+    public float myoStrength = 0f;
+    public float myoThreshold = 0.08f; 
 
     private void Awake() {
         if (dataSource != null) {
@@ -44,7 +45,7 @@ public class Doll : MonoBehaviour {
         float avg_sample = 0f;
         for (int i = 0; i < 8; i++) {                   
             float normalizedValue = sample[i] / 128f;
-            avg_sample += Math.Abs(normalizedValue);
+            avg_sample += Mathf.Abs(normalizedValue);
         }
 
         moving_avg[moving_idx] = avg_sample / 8f;
@@ -56,19 +57,19 @@ public class Doll : MonoBehaviour {
         }
         avg /= moving_avg.Length;
 
-        float value = 0f;
-        if(avg >= 0.08f)
+        myoStrength = 0f;
+        if(avg >= myoThreshold)
         {
-            value = Math.Min(1f, avg * multiplier);
+            myoStrength = Mathf.Min(1f, Mathf.Max(0f, avg - myoThreshold) * multiplier);
         }
 
         Ray ray = new Ray(beam.transform.position, beam.transform.up);
-        float rayDist = raycaster.CastRay(ray, value * 10f);
+        float rayDist = raycaster.CastRay(ray, myoStrength * 10f);
 
-        beam.transform.localScale = new Vector3(value, rayDist, value);
+        beam.transform.localScale = new Vector3(myoStrength, rayDist, myoStrength);
 
         float max_aura = 0.33f;
-        float aura_scale = max_aura - value * max_aura;
+        float aura_scale = max_aura - myoStrength * max_aura;
         aura.transform.localScale = new Vector3(aura_scale, aura_scale, aura_scale);
     }
 }
