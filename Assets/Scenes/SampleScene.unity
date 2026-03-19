@@ -331,7 +331,7 @@ GameObject:
   - component: {fileID: 104912801}
   - component: {fileID: 104912800}
   m_Layer: 0
-  m_Name: GhostSpawner
+  m_Name: MiniGhostSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -350,13 +350,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GhostSpawner
   minighost1Prefab: {fileID: 1586681850}
-  minSpawnTime: 5
-  maxSpawnTime: 10
+  minSpawnTime: 12
+  maxSpawnTime: 16
   spawnRadius: 3
   minHeight: 0
   maxHeight: 2
-  ghostsPerWave: 10
+  ghostsPerWave: 8
   delayBetweenGhosts: 0.1
+  wavesLeft: 5
 --- !u!4 &104912801
 Transform:
   m_ObjectHideFlags: 0
@@ -366,7 +367,7 @@ Transform:
   m_GameObject: {fileID: 104912799}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.19241, y: 0.899, z: 1.579}
+  m_LocalPosition: {x: 0.19241, y: 0.019, z: 1.579}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2022,15 +2023,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 9c084488711228960a27cd6b180d4f56, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.1
+      value: 0.066
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c084488711228960a27cd6b180d4f56, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.1
+      value: 0.066
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c084488711228960a27cd6b180d4f56, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.1
+      value: 0.066
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c084488711228960a27cd6b180d4f56, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2076,9 +2077,17 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 78845669091809102, guid: 9c084488711228960a27cd6b180d4f56, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 41fcb1ad892bfe99e9b76b9620cc1d26, type: 2}
     - target: {fileID: 919132149155446097, guid: 9c084488711228960a27cd6b180d4f56, type: 3}
       propertyPath: m_Name
       value: minighost1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9c084488711228960a27cd6b180d4f56, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2108,6 +2117,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49207d0050066ec1da2b8aa635cf0059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Ghost
+  lifeCounter: 100
+  speed: 0.25
+  rotationSpeed: 25
+  wobble: 30
+  player: {fileID: 1142313376}
 --- !u!135 &1586681853
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2281,7 +2295,7 @@ GameObject:
   - component: {fileID: 1998346427}
   - component: {fileID: 1998346426}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -14,6 +14,7 @@ public class GhostSpawner : MonoBehaviour
 
     public int ghostsPerWave = 10;
     public float delayBetweenGhosts = 0.1f;
+    public int wavesLeft = 5;
 
     void Start()
     {
@@ -28,8 +29,13 @@ public class GhostSpawner : MonoBehaviour
             float waitTime = Random.Range(minSpawnTime, maxSpawnTime);
             yield return new WaitForSeconds(waitTime);
 
-            // Spawn a full wave
-            yield return StartCoroutine(SpawnWave());
+            if (wavesLeft > 0)
+            {
+                // Spawn a full wave
+                yield return StartCoroutine(SpawnWave());
+                wavesLeft -= 1;
+            }
+
         }
     }
 
@@ -55,6 +61,7 @@ public class GhostSpawner : MonoBehaviour
         Vector3 spawnPosition = transform.position + offset;
 
         GameObject ghost = Instantiate(minighost1Prefab, spawnPosition, Quaternion.identity);
+        ghost.SetActive(true);
         ghost.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
     }
 }
